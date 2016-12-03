@@ -1,6 +1,10 @@
 defmodule Blex.Post do
   use Blex.Web, :model
 
+  @moduledoc """
+  Post model.
+  """
+
   schema "posts" do
     field :title, :string
     field :subtitle, :string
