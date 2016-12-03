@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/Harrisonl/Blex.svg?branch=master)](https://travis-ci.org/Harrisonl/Blex)
-[![Logo](http://imgur.com/niHyFNu)]
+[![Logo](http://i.imgur.com/AU333YV.png)]
 
 # Blex
 
