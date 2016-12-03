@@ -16,7 +16,8 @@ defmodule Blex.Router do
   scope "/", Blex.Public do
     pipe_through :browser
 
-    resources "/posts", PostController, only: [:show, :index]
+    get "/posts", PostController, :index
+    get "/posts/:slug", PostController, :show
     get "/", PostController, :index
   end
 

@@ -9,14 +9,16 @@ defmodule Blex.Post do
     field :title, :string
     field :subtitle, :string
     field :body, :string
+    field :body_html, :string
     field :author, :string
     field :metadata, :string
     field :status, :string
+    field :slug, :string
 
     timestamps
   end
 
-  @required_params ~w(title body status author)
+  @required_params ~w(title slug body status author)
   @optional_params ~w(subtitle metadata)
 
   @doc """
@@ -41,5 +43,27 @@ defmodule Blex.Post do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, @required_params, @optional_params)
+    |> unique_constraint(:slug)
+    |> generate_html
   end
+
+  # ----- PRIVATE
+  defp generate_html(changeset) do
+    body = changeset |> get_change(:body)
+
+    body
+    |> markdown_to_html
+    |> add_to_changeset(changeset)
+  end
+
+  defp markdown_to_html(nil), do: {:error, "There doesn't appear to be any markdown"}
+  defp markdown_to_html(markdown), do: Earmark.to_html(markdown)
+
+  defp add_to_changeset({:error, message}, changeset) do
+    add_error(changeset, :body, message)
+  end
+  defp add_to_changeset(html, changeset) do
+    put_change(changeset, :body_html, html)
+  end
+
 end

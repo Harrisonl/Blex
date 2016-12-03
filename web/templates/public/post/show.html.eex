@@ -1,1 +1,5 @@
-<%= @post.title %>
+<h1><%= @post.title %></h1>
+<hr />
+<em><%= @post.author %> - <%= @post.inserted_at %></em>
+
+<%= raw(@post.body_html) %>

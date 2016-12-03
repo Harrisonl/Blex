@@ -2,7 +2,7 @@ defmodule Blex.PostControllerTest do
   use Blex.ConnCase
 
   alias Blex.Post
-  @valid_attrs %{title: "Test Post", body: "# Markdown", status: "draft", author: "Alice"}
+  @valid_attrs %{title: "Test Post", body: "# Markdown", status: "draft", author: "Alice", slug: "test-post"}
   @invalid_attrs %{}
 
   @tag :index
@@ -14,7 +14,7 @@ defmodule Blex.PostControllerTest do
   @tag :show
   test "shows chosen resource", %{conn: conn} do
     post = %Post{} |> Post.changeset(@valid_attrs) |> Repo.insert!
-    conn = get conn, post_path(conn, :show, post)
+    conn = get conn, post_path(conn, :show, post.slug)
     assert html_response(conn, 200) =~ "Test Post"
   end
 

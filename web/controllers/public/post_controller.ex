@@ -17,8 +17,8 @@ defmodule Blex.Public.PostController do
 
   This will be constantly changing.
   """
-  def show(conn, %{"id" => id}) do
-    post = Repo.get!(Post, id)
+  def show(conn, %{"slug" => slug}) do
+    post = Repo.get_by!(Post, slug: slug)
     render(conn, "show.html", post: post)
   end
 
