@@ -13,14 +13,16 @@ defmodule Blex.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", Blex do
-    pipe_through :browser # Use the default browser stack
+  scope "/", Blex.Public do
+    pipe_through :browser
 
-    get "/", PageController, :index
     resources "/posts", PostController, only: [:show, :index]
+    get "/", PostController, :index
   end
 
   scope "/", Blex do
+    pipe_through :browser
+
     scope "/admin", Admin, as: :admin do
       resources "/posts", PostController
     end

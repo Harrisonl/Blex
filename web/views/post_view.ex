@@ -1,3 +1,3 @@
-defmodule Blex.PostView do
+defmodule Blex.Public.PostView do
   use Blex.Web, :view
 end

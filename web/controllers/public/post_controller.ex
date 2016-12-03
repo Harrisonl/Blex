@@ -1,4 +1,4 @@
-defmodule Blex.PostController do
+defmodule Blex.Public.PostController do
   use Blex.Web, :controller
 
   alias Blex.Post
@@ -12,6 +12,11 @@ defmodule Blex.PostController do
     render(conn, "index.html", posts: posts)
   end
 
+  @doc """
+  Renders a single post, selected by the passed in slug.
+
+  This will be constantly changing.
+  """
   def show(conn, %{"id" => id}) do
     post = Repo.get!(Post, id)
     render(conn, "show.html", post: post)

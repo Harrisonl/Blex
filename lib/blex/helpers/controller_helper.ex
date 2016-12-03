@@ -19,7 +19,7 @@ defmodule Blex.ControllerHelper do
     |> render("new.html", changeset: changeset)
   end
 
-  def render_insert({:ok, resource}, conn, path) do
+  def render_insert({:ok, _resource}, conn, path) do
     conn
     |> put_flash(:info, "Successfully created.")
     |> redirect(to: path)
