@@ -1,0 +1,26 @@
+<h2>Listing posts</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Subtitle</th>
+      <th>Body</th>
+      <th>Author</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for post <- @posts do %>
+    <tr>
+      <td><%= post.title %></td>
+      <td><%= post.subtitle %></td>
+      <td><%= post.body %></td>
+      <td><%= post.author %></td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New post", to: post_path(@conn, :new) %>

@@ -36,6 +36,7 @@ defmodule Blex.Web do
 
       import Blex.Router.Helpers
       import Blex.Gettext
+      import Blex.ControllerHelper
     end
   end
 

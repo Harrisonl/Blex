@@ -17,6 +17,7 @@ defmodule Blex.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
+    resources "/posts", PostController
   end
 
   # Other scopes may use custom stacks.
