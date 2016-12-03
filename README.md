@@ -1,6 +1,5 @@
+![Logo](http://i.imgur.com/AU333YV.png)
 [![Build Status](https://travis-ci.org/Harrisonl/Blex.svg?branch=master)](https://travis-ci.org/Harrisonl/Blex)
-[![Logo](http://i.imgur.com/AU333YV.png)]
-
 # Blex
 
 A developer focused blogging platform written in Phoenix/Elixir.
