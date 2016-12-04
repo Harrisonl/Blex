@@ -8,7 +8,7 @@ defmodule Blex.PostControllerTest do
   @tag :index
   test "lists all entries on index", %{conn: conn} do
     conn = get conn, post_path(conn, :index)
-    assert html_response(conn, 200) =~ "Listing posts"
+    assert html_response(conn, 200) =~ "Test Post"
   end
 
   @tag :show

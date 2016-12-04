@@ -1,24 +1,20 @@
-<h2>Listing posts</h2>
+<div id="post-index" class="container">
+  <ol class="post-list">
 
-<table class="table">
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Subtitle</th>
-      <th>Body</th>
-      <th>Author</th>
+    <%= for post <- @posts do %>
 
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-<%= for post <- @posts do %>
-    <tr>
-      <td><%= link post.title, to: post_path(@conn, :show, post.slug) %></td>
-      <td><%= post.subtitle %></td>
-      <td><%= post.body %></td>
-      <td><%= post.author %></td>
-    </tr>
-<% end %>
-  </tbody>
-</table>
+      <li class="post-stub {{post_class}}" >
+        <a class="js-ajax-link"  title="{{title}} | {{@blog.title}}" href="{{url}}">
+          <h2 class="post-stub-title"><%= link post.title, to: post_path(@conn, :show, post.slug) %></h2>
+        </a>
+        <p><%= String.slice(post.body, 0, 100) %></p>
+        <span class="post-stub-author"><%= post.author %></span>
+        <time class="post-stub-date" ><%= post.inserted_at %></time>
+        <span class="post-stub-tag">Start</span>
+        <span class="post-stub-tag">Featured</span>
+      </li>
+    <% end %>
+  </ol>
+  <div class="post-navigation">
+  </div>
+</div>

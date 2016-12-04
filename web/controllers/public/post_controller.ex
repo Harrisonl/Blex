@@ -26,7 +26,7 @@ defmodule Blex.Public.PostController do
         |> render(Blex.ErrorView, "404.html")
       {:ok, post} ->
         conn
-        |> render("show.html", post: post)
+        |> render("show.html", post: post, layout: {Blex.LayoutView, "post.html"})
     end
   end
 
