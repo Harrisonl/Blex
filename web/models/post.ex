@@ -48,13 +48,12 @@ defmodule Blex.Post do
   end
 
   # ----- PRIVATE
-  defp generate_html(changeset) do
-    body = changeset |> get_change(:body)
-
+  defp generate_html(%{changes: %{body: body}} = changeset) do
     body
     |> markdown_to_html
     |> add_to_changeset(changeset)
   end
+  defp generate_html(changeset), do: changeset
 
   defp markdown_to_html(nil), do: {:error, "There doesn't appear to be any markdown"}
   defp markdown_to_html(markdown), do: Earmark.to_html(markdown)

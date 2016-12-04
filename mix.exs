@@ -19,7 +19,7 @@ defmodule Blex.Mixfile do
   def application do
     [mod: {Blex, []},
      applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex]]
+                    :phoenix_ecto, :postgrex, :earmark, :con_cache]]
   end
 
   # Specifies which paths to compile per environment.
