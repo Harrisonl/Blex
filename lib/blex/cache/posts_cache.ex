@@ -23,6 +23,7 @@ defmodule Blex.PostsCache do
   end
 
   def init do
+    get_posts
     {:ok, []}
   end
 
@@ -99,11 +100,7 @@ defmodule Blex.PostsCache do
   end
 
   defp get_or_store_posts do 
-    Post
-    |> Repo.all
-    |> Enum.map(fn(p) ->
-      ConCache.get_or_store(:posts_cache, p.slug, fn() -> p end)
-    end)
+    ConCache.get_or_store(:posts_cache, :posts, fn() -> Repo.all(Post) end)
   end
 
   defp create_response(nil), do: {:reply, {:error, "Post not found"}, []}

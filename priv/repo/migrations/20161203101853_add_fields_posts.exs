@@ -4,7 +4,7 @@ defmodule Blex.Repo.Migrations.AddFieldsPosts do
   def change do
     alter table(:posts) do
       add :slug, :string
-      add :body_html, :string
+      add :body_html, :text
     end
 
     create unique_index(:posts, [:slug])

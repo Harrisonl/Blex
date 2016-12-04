@@ -5,7 +5,7 @@ defmodule Blex.Repo.Migrations.CreatePosts do
     create table(:posts) do
       add :title, :string
       add :subtitle, :string
-      add :body, :string
+      add :body, :text
       add :author, :string
       add :metadata, :string
       add :status, :string
