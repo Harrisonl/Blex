@@ -1,11 +1,12 @@
 #!/bin/bash -e
-echo "Fetching Dependencies"
+echo "###################\nFetching Dependencies\n###################"
 mix deps.get
-echo "Creating Database: (User/Password = postgres)"
+echo "###################\nCreating Database: User/Pw = postgres\n###################"
 mix ecto.create
-echo "Migrating Database"
+echo "###################\nMigrating Database\n###################"
 mix ecto.migrate
-echo "Running Test"
+echo "###################\nRunning Tests\n###################"
 mix test
-echo "Seeding database"
+echo "###################\nSeeding tests\n###################"
+mix test
 mix run priv/repo/seeds.exs

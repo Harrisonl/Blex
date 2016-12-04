@@ -37,7 +37,7 @@ If you would like to contribute:
 
 1. Click [Issues](https://github.com/harrisonl/blex/issues) and select a feature you want to tackle
 
-2. Pull down the code and get the project setup or alternatively run the setup shell script to do it for you (coming soon)
+2. Pull down the code and get the project setup or alternatively run the setup shell script to do it for you `./setup.sh`
 
 3. Create a branch with a name resembling the issue you want to tackle
 
