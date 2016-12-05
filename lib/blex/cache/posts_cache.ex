@@ -85,12 +85,17 @@ defmodule Blex.PostsCache do
     |> create_response
   end
 
+  @doc """
+    TODO: Need to change so that the index posts doesn't fecth each field.
+  """
   def handle_cast({:update_posts}, state) do
     Post
     |> Repo.all
     |> Enum.each(fn(p) ->
       ConCache.update(:posts_cache, p.slug, fn(_old_val) -> {:ok, p} end)
     end)
+
+    ConCache.update(:posts_cache, :posts, fn(_old) -> {:ok, Repo.all(Post)} end)
     {:noreply, state}
   end
 

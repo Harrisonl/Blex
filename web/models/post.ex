@@ -15,6 +15,7 @@ defmodule Blex.Post do
     field :status, :string
     field :slug, :string
 
+    belongs_to :user, Blex.User
     timestamps
   end
 
@@ -44,6 +45,7 @@ defmodule Blex.Post do
     struct
     |> cast(params, @required_params, @optional_params)
     |> unique_constraint(:slug)
+    |> assoc_constraint(:user)
     |> generate_html
   end
 

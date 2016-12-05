@@ -26,6 +26,11 @@
             <ul class="site-nav">
               <li class="site-nav-item"><a class="js-ajax-link" href="#">Latest Post</a></li>
               <li class="site-nav-item"><a class="js-ajax-link js-show-index"  href="#">Browse Posts</a></li>
+              <%= if @current_user do %>
+                <li class="site-nav-item">
+                  <%= link "Sign out", to: signout_session_path(@conn, :delete) %>
+                </li>
+              <% end %>
             </ul>
           </div>
         </div>
