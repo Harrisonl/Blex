@@ -8,9 +8,9 @@
     <meta name="author" content="">
 
     <title>Hello Blex!</title>
-    <link rel="stylesheet" href="<%= static_path(@conn, "/css/normalize.css") %>">
-    <link rel="stylesheet" href="<%= static_path(@conn, "/css/style.css") %>">
-    <link rel="stylesheet" href="<%= static_path(@conn, "/css/nprogress.css") %>">
+    <link rel="stylesheet" href="/css/normalize.css") %>">
+    <link rel="stylesheet" href="/css/style.css") %>">
+    <link rel="stylesheet" href="/css/nprogress.css") %>">
   </head>
 
   <body>
@@ -49,6 +49,5 @@
       </div>
     </footer>
 
-    <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
   </body>
 </html>

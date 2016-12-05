@@ -9,6 +9,10 @@ defmodule Blex.Public.PostController do
   """
   def index(conn, _params) do
     {:ok, posts} = PostsCache.get_posts
+
+    #conn
+    #|> put_resp_header("content-type", "text/html; charset=utf-8")
+    #|> send_file(200, "priv/static/test.html")
     render(conn, "index.html", posts: posts)
   end
 
@@ -26,7 +30,8 @@ defmodule Blex.Public.PostController do
         |> render(Blex.ErrorView, "404.html")
       {:ok, post} ->
         conn
-        |> render("show.html", post: post, layout: {Blex.LayoutView, "post.html"})
+        |> put_resp_header("content-type", "text/html; charset=utf-8")
+        |> send_file(200, "priv/static/#{slug}.html")
     end
   end
 

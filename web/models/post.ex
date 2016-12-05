@@ -47,6 +47,17 @@ defmodule Blex.Post do
     |> generate_html
   end
 
+  def generate_static_html(post) do
+    html = 
+      Phoenix.View.render_to_string(Blex.Public.PostView,
+                                    "show.html", 
+                                    post: post, 
+                                    layout: {Blex.LayoutView, "post.html"})
+      |> String.replace("\n", "")
+    
+    File.write("./priv/static/#{post.slug}.html", html)
+  end
+
   # ----- PRIVATE
   defp generate_html(%{changes: %{body: body}} = changeset) do
     body
