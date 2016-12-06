@@ -39,7 +39,7 @@ defmodule Blex.User do
 
   The password is then hashed and stored under password_hash
   """
-  def registration_chanageset(struct, params) do
+  def registration_changeset(struct, params) do
     struct
     |> changeset(params)
     |> cast(params, ~w(password)a, [])

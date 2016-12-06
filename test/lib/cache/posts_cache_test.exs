@@ -1,5 +1,6 @@
 defmodule Blex.PostsCacheTest do
   use ExUnit.Case, async: false
+  import Ecto.Query
   alias Blex.{Post, Repo, PostsCache, TestUtils}
 
   @valid_attrs %{title: "Test Post 3", body: "# Markdown", status: "draft", author: "Alice", slug: "test-post"}
@@ -50,7 +51,7 @@ defmodule Blex.PostsCacheTest do
       |> Enum.each(fn(p) -> ConCache.insert_new(:posts_cache, p.slug, p) end)
       {:ok, posts} = PostsCache.get_posts
       assert 2 == posts |> length
-      assert posts == Repo.all(Post)
+      assert posts == Repo.all((from p in Post, select: [:title, :slug, :subtitle, :author, :inserted_at, :body]))
     end
 
     @tag :success
@@ -77,12 +78,12 @@ defmodule Blex.PostsCacheTest do
 
     @tag :success
     test "Doesn't change existing posts in the cache", %{post: post} do
-      changed_post = Post.changeset(post, %{slug: "changed-slug"}) |> Repo.update!
-      new_post = Post.changeset(%Post{}, @valid_attrs) |> Repo.insert!
+      Post.changeset(post, %{slug: "changed-slug"}) |> Repo.update!
+      Post.changeset(%Post{}, @valid_attrs) |> Repo.insert!
       PostsCache.update_posts
-      GenServer.call(PostsCache, {:test_callback})
+      PostsCache.test_callback
       {:ok, posts} = PostsCache.get_posts
-      assert  posts == [changed_post, new_post]
+      assert  posts |> length == 2
     end
 
   end

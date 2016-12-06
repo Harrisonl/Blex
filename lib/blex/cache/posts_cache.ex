@@ -73,6 +73,13 @@ defmodule Blex.PostsCache do
     GenServer.cast(__MODULE__, {:update_posts})
   end
 
+  @doc """
+  Callback used in tests to ensure that casts are properly completed before the test exits.
+  """
+  def test_callback do
+    GenServer.call(__MODULE__, {:test_callback})
+  end
+
   # ------ GENSERVER IMP
   @doc """
   Used to ensure that a cast succeeds in the test cases.

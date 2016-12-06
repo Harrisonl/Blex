@@ -13,6 +13,7 @@
   "earmark": {:hex, :earmark, "1.0.3", "89bdbaf2aca8bbb5c97d8b3b55c5dd0cff517ecc78d417e87f1d0982e514557b", [:mix], []},
   "ecto": {:hex, :ecto, "2.0.6", "9dcbf819c2a77f67a66b83739b7fcc00b71aaf6c100016db4f798930fa4cfd47", [:mix], [{:db_connection, "~> 1.0", [hex: :db_connection, optional: true]}, {:decimal, "~> 1.1.2 or ~> 1.2", [hex: :decimal, optional: false]}, {:mariaex, "~> 0.8.0", [hex: :mariaex, optional: true]}, {:poison, "~> 1.5 or ~> 2.0", [hex: :poison, optional: true]}, {:poolboy, "~> 1.5", [hex: :poolboy, optional: false]}, {:postgrex, "~> 0.12.0", [hex: :postgrex, optional: true]}, {:sbroker, "~> 1.0-beta", [hex: :sbroker, optional: true]}]},
   "elixir_make": {:hex, :elixir_make, "0.4.0", "992f38fabe705bb45821a728f20914c554b276838433349d4f2341f7a687cddf", [:mix], []},
+  "ex_guard": {:hex, :ex_guard, "1.1.1", "bd260c9aa1a5b8c438adab4cf4131e775af637723c241296cf1a100b402ade52", [:mix], [{:fs, "~> 0.9", [hex: :fs, optional: false]}]},
   "exactor": {:hex, :exactor, "2.2.2", "90b27d72c05614801a60f8400afd4e4346dfc33ea9beffe3b98a794891d2ff96", [:mix], []},
   "fs": {:hex, :fs, "0.9.2", "ed17036c26c3f70ac49781ed9220a50c36775c6ca2cf8182d123b6566e49ec59", [:rebar], []},
   "gettext": {:hex, :gettext, "0.12.2", "4f71a0df7b0bf5693419da593b4ddde558cc28e8f56a991fbfc2b51be1d5c848", [:mix], []},

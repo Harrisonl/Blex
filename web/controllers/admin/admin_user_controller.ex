@@ -18,7 +18,7 @@ defmodule Blex.Admin.UserController do
   """
   def create(conn, %{"user" => user_params}) do
     %User{} 
-    |> User.registration_chanageset(user_params)
+    |> User.registration_changeset(user_params)
     |> Repo.insert
     |> render_insert(conn, admin_user_path(conn, :index))
   end

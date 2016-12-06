@@ -23,13 +23,13 @@ defmodule Blex.UserTest do
 
   @tag :success
   test "registration changeset will valid attrs" do
-    changeset = User.registration_chanageset(%User{}, @registration_valid_attrs)
+    changeset = User.registration_changeset(%User{}, @registration_valid_attrs)
     assert changeset.valid?
   end
 
   @tag :failure
   test "registration changeset with invalid password" do
-    changeset = User.registration_chanageset(%User{}, @registration_invalid_attrs)
+    changeset = User.registration_changeset(%User{}, @registration_invalid_attrs)
     refute changeset.valid?
   end
 end
