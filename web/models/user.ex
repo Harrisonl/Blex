@@ -1,6 +1,10 @@
 defmodule Blex.User do
   use Blex.Web, :model
 
+  @moduledoc """
+  User model
+  """
+
   schema "users" do
     field :email, :string
     field :name, :string
@@ -43,7 +47,7 @@ defmodule Blex.User do
     |> hash_password
   end
 
-  defp hash_password(changeset=%Ecto.Changeset{valid?: true, changes: %{password: password}}) do
+  defp hash_password(changeset = %Ecto.Changeset{valid?: true, changes: %{password: password}}) do
     changeset
     |> put_change(:password_hash, Comeonin.Bcrypt.hashpwsalt(password))
   end
