@@ -28,6 +28,13 @@ defmodule Blex.User do
     |> validate_required(@required_fields)
   end
 
+  @doc """
+  Builds a new user for the struct and params provided.
+
+  The password gets validated to be 8-characters long minimum. 
+
+  The password is then hashed and stored under password_hash
+  """
   def registration_chanageset(struct, params) do
     struct
     |> changeset(params)

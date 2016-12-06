@@ -4,11 +4,20 @@ defmodule Blex.SessionController do
 
   plug :scrub_params, "session" when action in ~w(create)a
 
-  def new(conn, _params) do
-    conn
-    |> render("new.html")
-  end
+  @doc """
+  Renders the login page.
+  """
+  def new(conn, _params), do: conn |> render("new.html")
 
+  @doc """
+  Attempts to log the user in. 
+
+  If the credentials are invalid, or the user is non-existent it will return an error and
+  re-render the login screen. 
+
+  `Authenticator.login/2` will also simulate a password check if the user isn't found in order
+  to prevent brute force attacks.
+  """
   def create(conn, %{"session" => %{"email" => email, "password" => password}}) do
     login_result = 
       User
@@ -27,6 +36,9 @@ defmodule Blex.SessionController do
     end
   end
 
+  @doc """
+  Signs a user out and returns them to the index.
+  """
   def delete(conn, _params) do
     conn
     |> Guardian.Plug.sign_out

@@ -1,6 +1,8 @@
 defmodule Blex.GuardianSerializer do
   @behaviour Guardian.Serializer
 
+  @moduledoc false
+
   alias Blex.Repo
   alias Blex.User
 
