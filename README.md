@@ -4,6 +4,20 @@
 
 A developer focused blogging platform written in Phoenix/Elixir.
 
+### Features
+---
+Below is a list of the (proposed features) to be included in the Blex blog platform.
+
+* **[Syntax Highlight](https://github.com/Harrisonl/Blex/issues/2)**: Choice between syntax highlighting or automatic creation of gists.
+* **[Post Series](https://github.com/Harrisonl/Blex/issues/7)**: Group posts as being apart of a series (e.g. a tutorial) for easy display and navigation
+* **[Project Links](https://github.com/Harrisonl/Blex/issues/6)**: Link posts to github repos and have a widget displayed clearly showing readers where they can find more info
+* **[Meaningful Statistics](https://github.com/Harrisonl/Blex/issues/5)**: Show you where your most traffic is coming from and how users interact with your sites
+* **[Inline Comments](https://github.com/Harrisonl/Blex/issues/4)**: Allow users to comment on particular lines in your post for more context specific comments.
+* **[Import Blog Data](https://github.com/Harrisonl/Blex/issues/1)**: Import blog data automatically from other platforms such as Wordpress and Ghost
+* **[Clarifying Links](https://github.com/Harrisonl/Blex/issues/8)**: Short blog posts which provide explanation on complex, but out of scope topics from another post.
+
+If you have any other idea for features that you think would make blogging easier as a developer - feel free to craete an issue!
+
 ### Getting Started
 ---
 
