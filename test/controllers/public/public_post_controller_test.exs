@@ -7,6 +7,7 @@ defmodule Blex.PostControllerTest do
 
   @tag :index
   test "lists all entries on index", %{conn: conn} do
+    %Post{} |> Post.changeset(@valid_attrs) |> Repo.insert!
     conn = get conn, post_path(conn, :index)
     assert html_response(conn, 200) =~ "Test Post"
   end

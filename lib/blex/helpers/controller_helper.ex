@@ -24,16 +24,4 @@ defmodule Blex.ControllerHelper do
     |> put_flash(:info, "Successfully created.")
     |> redirect(to: path)
   end
-
-
-  def render_get({:error, message}, conn, path) do
-    conn
-    |> put_flash(:error, message)
-    |> render(Blex.ErrorView, "404.html", resource: nil)
-  end
-
-  def render_get({:ok, resource}, conn, path) do
-    conn
-    |> render("show.html", resource: resource)
-  end
 end

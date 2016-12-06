@@ -1,5 +1,6 @@
 defmodule Blex.PostsCache do
   use GenServer
+  import Ecto.Query
 
   alias Blex.Repo
   alias Blex.Post
@@ -62,8 +63,21 @@ defmodule Blex.PostsCache do
     GenServer.call(__MODULE__, {:get_posts})
   end
 
+  @doc """
+  Updates the entire posts_cache. 
+
+  This includes adding a smaller version of each post to the :posts key (in order for the index view)
+  and each full post to their respective slug keys.
+  """
   def update_posts do
     GenServer.cast(__MODULE__, {:update_posts})
+  end
+
+  @doc """
+  Callback used in tests to ensure that casts are properly completed before the test exits.
+  """
+  def test_callback do
+    GenServer.call(__MODULE__, {:test_callback})
   end
 
   # ------ GENSERVER IMP
@@ -91,6 +105,8 @@ defmodule Blex.PostsCache do
     |> Enum.each(fn(p) ->
       ConCache.update(:posts_cache, p.slug, fn(_old_val) -> {:ok, p} end)
     end)
+
+    ConCache.update(:posts_cache, :posts, fn(_old) -> {:ok, Repo.all(posts_for_index)} end)
     {:noreply, state}
   end
 
@@ -100,7 +116,11 @@ defmodule Blex.PostsCache do
   end
 
   defp get_or_store_posts do 
-    ConCache.get_or_store(:posts_cache, :posts, fn() -> Repo.all(Post) end)
+    ConCache.get_or_store(:posts_cache, :posts, fn() -> Repo.all(posts_for_index) end)
+  end
+
+  defp posts_for_index do
+    (from p in Post, select: [:title, :slug, :subtitle, :author, :inserted_at, :body])
   end
 
   defp create_response(nil), do: {:reply, {:error, "Post not found"}, []}

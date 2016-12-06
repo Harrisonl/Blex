@@ -1,0 +1,4 @@
+<h1>Posts</h1>
+<%= for post <- @posts do %>
+  <h3><%= post.title %></h3>
+<% end %>

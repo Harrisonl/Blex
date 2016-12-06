@@ -19,7 +19,7 @@ defmodule Blex.Mixfile do
   def application do
     [mod: {Blex, []},
      applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex, :earmark, :con_cache]]
+                    :phoenix_ecto, :postgrex, :earmark, :con_cache, :comeonin, :guardian]]
   end
 
   # Specifies which paths to compile per environment.
@@ -44,6 +44,8 @@ defmodule Blex.Mixfile do
      # -- Blex Deps
      {:earmark, "~> 1.0"},
      {:con_cache, "~> 0.11.1"}, 
+     {:comeonin, "~>3.0"},
+     {:guardian, "~> 0.13.0"},
      
      # -- Blex Dev/Test Deps
      {:credo, "~> 0.5", only: [:dev, :test]},
