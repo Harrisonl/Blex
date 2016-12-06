@@ -5,6 +5,11 @@ defmodule Blex.PostControllerTest do
   @valid_attrs %{title: "Test Post", body: "# Markdown", status: "draft", author: "Alice", slug: "test-post"}
   @invalid_attrs %{}
 
+  setup do
+    Blex.TestUtils.reset_all
+    :ok
+  end
+
   @tag :index
   test "lists all entries on index", %{conn: conn} do
     %Post{} |> Post.changeset(@valid_attrs) |> Repo.insert!

@@ -31,6 +31,7 @@ defmodule Blex.SessionController do
         |> redirect(to: post_path(conn, :index))
       _ ->
         conn
+        |> put_status(422)
         |> put_flash(:error, "Invalid Email/Password Combination")
         |> render("new.html")
     end
