@@ -3,9 +3,6 @@ defmodule Blex.Admin.UserControllerTest do
 
   alias Blex.{User, Repo, TestUtils}
 
-  @valid_attrs %{bio: "some content", email: "some content", github: "some content", name: "some content", role: "some content", twitter: "some content"}
-  @invalid_attrs %{}
-
   @registration_valid_attrs %{bio: "some content", email: "some content", github: "some content", name: "some content", role: "some content", twitter: "some content", password: "12345678"}
   @registration_invalid_attrs %{bio: "some content", email: "some content", github: "some content", name: "some content", role: "some content", twitter: "some content", password: "123458"}
 

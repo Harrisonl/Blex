@@ -4,7 +4,6 @@ defmodule Blex.PostsCacheTest do
   alias Blex.{Post, Repo, PostsCache, TestUtils}
 
   @valid_attrs %{title: "Test Post 3", body: "# Markdown", status: "draft", author: "Alice", slug: "test-post"}
-  @invalid_attrs %{}
 
   setup_all do
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(Repo)

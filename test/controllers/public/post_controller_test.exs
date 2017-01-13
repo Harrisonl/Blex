@@ -3,7 +3,6 @@ defmodule Blex.PostControllerTest do
 
   alias Blex.Post
   @valid_attrs %{title: "Test Post", body: "# Markdown", status: "draft", author: "Alice", slug: "test-post"}
-  @invalid_attrs %{}
 
   setup do
     Blex.TestUtils.reset_all

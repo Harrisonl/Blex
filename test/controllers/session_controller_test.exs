@@ -3,7 +3,6 @@ defmodule Blex.SessionControllerTest do
 
   alias Blex.{User, Repo}
   @valid_attrs %{bio: "some content", email: "alice@test.com", github: "some content", password: "12345678", name: "some content", role: "some content", twitter: "some content"}
-  @invalid_attrs %{}
 
   setup do
     user = User.registration_changeset(%User{}, @valid_attrs) |> Repo.insert! 

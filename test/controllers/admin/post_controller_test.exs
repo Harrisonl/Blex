@@ -35,7 +35,7 @@ defmodule Blex.Admin.PostControllerTest do
     setup do
       TestUtils.reset_all
       user = TestUtils.create_user
-      conn = Guardian.Plug.api_sign_in(build_conn, user)
+      conn = Guardian.Plug.api_sign_in(build_conn(), user)
       {:ok, %{conn: conn, user: user}}
     end
 
