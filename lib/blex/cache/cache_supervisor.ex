@@ -16,9 +16,9 @@ defmodule Blex.CacheSupervisor do
   def init([]) do
     children = [
       worker(ConCache, [[ttl: :timer.hours(720), ttl_check: :timer.hours(1)], [name: :posts_cache]], id: :posts_cache),
-      worker(ConCache, [[ttl: :timer.hours(720), ttl_check: :timer.hours(1)], [name: :settings_cache]], id: :settings_cache),
 
-      worker(Blex.PostsCache, [])
+      worker(Blex.PostsCache, []),
+      worker(Blex.SettingsCache, [])
     ]
 
     supervise(children, strategy: :one_for_one)

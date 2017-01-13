@@ -17,3 +17,4 @@ erl_crash.dump
 
 # Remove .iex.exs
 .iex.exs
+settings_cache_disk

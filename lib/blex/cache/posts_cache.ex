@@ -24,7 +24,7 @@ defmodule Blex.PostsCache do
   end
 
   def init do
-    get_posts
+    get_posts()
     {:ok, []}
   end
 
@@ -89,7 +89,7 @@ defmodule Blex.PostsCache do
   end
 
   def handle_call({:get_posts},_from, state) do
-    posts = get_or_store_posts
+    posts = get_or_store_posts()
     {:reply, {:ok, posts}, state}
   end
 
@@ -106,7 +106,7 @@ defmodule Blex.PostsCache do
       ConCache.update(:posts_cache, p.slug, fn(_old_val) -> {:ok, p} end)
     end)
 
-    ConCache.update(:posts_cache, :posts, fn(_old) -> {:ok, Repo.all(posts_for_index)} end)
+    ConCache.update(:posts_cache, :posts, fn(_old) -> {:ok, Repo.all(posts_for_index())} end)
     {:noreply, state}
   end
 
@@ -116,7 +116,7 @@ defmodule Blex.PostsCache do
   end
 
   defp get_or_store_posts do 
-    ConCache.get_or_store(:posts_cache, :posts, fn() -> Repo.all(posts_for_index) end)
+    ConCache.get_or_store(:posts_cache, :posts, fn() -> Repo.all(posts_for_index()) end)
   end
 
   defp posts_for_index do
