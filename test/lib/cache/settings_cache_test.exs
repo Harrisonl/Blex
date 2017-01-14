@@ -3,16 +3,95 @@ defmodule Blex.SettingsCacheTest do
   alias Blex.{SettingsCache}
 
   setup_all do
+    reset_cache()
+    on_exit fn ->
+      :dets.delete_all_objects(:settings_cache_disk)
+      :dets.close(:settings_cache_disk)
+    end
     :ok
+  end
+
+  describe "validations" do
+    test "should have all the errors along with settings" do
+      reset_cache()
+      assert SettingsCache.update_settings(%{"blog_name" => 123, "initial_setup" => 123}) == {:ok, [{:favicon, "http://favicon_url"}, {:comment_platform, :blex}, {:header_title, "Blog title"}, {:blog_tagline, "Your Blog tagline"}, {:header_content, "custom code inserted before <body>"}, {:logo, "http://logo_url"}, {:initial_setup, false}, {:blog_name, "Blog Name"}, {:footer_content, "custom code inserted after <body>"}, [initial_setup: "Must be true/false", blog_name: "Must be less than 256 characters"]]}
+    end
+
+    test "should update initial_setup" do
+      assert :ok == SettingsCache.update_setting("initial_setup", true)
+    end
+
+    test "should not update initial_setup" do
+      assert {:error, {:initial_setup, _reason}} = SettingsCache.update_setting("initial_setup", 123)
+    end
+
+    test "should update comment_platform" do
+      assert :ok == SettingsCache.update_setting("comment_platform", "blex")
+    end
+
+    test "should not update comment_platform" do
+      assert {:error, {:comment_platform, _reason}} = SettingsCache.update_setting("comment_platform", 123)
+    end
+
+    test "should update blog_name" do
+      assert :ok == SettingsCache.update_setting("blog_name", "test")
+    end
+
+    test "should not update blog_name" do
+      assert {:error, {:blog_name, _reason}} = SettingsCache.update_setting("blog_name", 123)
+    end
+
+    test "should update blog_tagline" do
+      assert :ok == SettingsCache.update_setting("blog_tagline", "test")
+    end
+
+    test "should not update blog_tagline" do
+      assert {:error, {:blog_tagline, _reason}} = SettingsCache.update_setting("blog_tagline", 123)
+    end
+
+    test "should update header_title" do
+      assert :ok == SettingsCache.update_setting("header_title", "test")
+    end
+
+    test "should not update header_title" do
+      assert {:error, {:header_title, _reason}} = SettingsCache.update_setting("header_title", 123)
+    end
+
+    test "should update logo" do
+      assert :ok == SettingsCache.update_setting("logo", "test")
+    end
+
+    test "should not update logo" do
+      assert {:error, {:logo, _reason}} = SettingsCache.update_setting("logo", 123)
+    end
+
+    test "should update favicon" do
+      assert :ok == SettingsCache.update_setting("favicon", "test")
+    end
+
+    test "should not update favicon" do
+      assert {:error, {:favicon, _reason}} = SettingsCache.update_setting("favicon", 123)
+    end
+
+    test "should update header_content" do
+      assert :ok == SettingsCache.update_setting("header_content", "test")
+    end
+
+    test "should not update header_content" do
+      assert {:error, {:header_content, _reason}} = SettingsCache.update_setting("header_content", 123)
+    end
+
+    test "should update footer_content" do
+      assert :ok == SettingsCache.update_setting("footer_content", "test")
+    end
+
+    test "should not update footer_content" do
+      assert {:error, {:footer_content, _reason}} = SettingsCache.update_setting("footer_content", 123)
+    end
   end
 
   describe "get_setting/1" do
     setup do
-      on_exit fn ->
-        GenServer.call(SettingsCache, {:clear})
-        :dets.delete_all_objects(:settings_cache_disk)
-        :dets.close(:settings_cache_disk)
-      end
       SettingsCache.update_setting(:blog_name, "Alice's Blog")
       :ok
     end
@@ -29,26 +108,16 @@ defmodule Blex.SettingsCacheTest do
   end
 
   describe "get_settings/1" do
-    setup do
-      on_exit fn ->
-        GenServer.call(SettingsCache, {:clear})
-        :dets.delete_all_objects(:settings_cache_disk)
-        :dets.close(:settings_cache_disk)
-        kill_proc(SettingsCache)
-      end
-
-      SettingsCache.update_setting(:blog_name, "Alice's Blog")
-      :ok
-    end
 
     @tag :success
     test "returns {:ok, settings} for a stored setting" do
+      reset_cache()
       assert SettingsCache.get_settings == {:ok, 
        [favicon: "http://favicon_url", comment_platform: :blex,
         header_title: "Blog title", blog_tagline: "Your Blog tagline",
         header_content: "custom code inserted before <body>",
         logo: "http://logo_url", initial_setup: false,
-        blog_name: "Alice's Blog",
+        blog_name: "Blog Name",
         footer_content: "custom code inserted after <body>"]}
     end
   end
@@ -56,42 +125,32 @@ defmodule Blex.SettingsCacheTest do
   describe "start_link/0" do
     setup do
       on_exit fn ->
-        GenServer.call(SettingsCache, {:clear})
-        :dets.delete_all_objects(:settings_cache_disk)
-        :dets.close(:settings_cache_disk)
-        kill_proc(SettingsCache)
+        reset_cache()
       end
       :ok
     end
 
     @tag :success
     test "it should load the default values" do
-      kill_proc(SettingsCache)
+        reset_cache()
       assert :ets.info(:settings_cache)[:size] == 9
     end
 
     @tag :success
     test "it should not override existing values" do
       SettingsCache.update_setting(:blog_name, "Bob's Blog")
-      kill_proc(SettingsCache)
       assert SettingsCache.get_setting(:blog_name) == {:ok, "Bob's Blog"}
     end
   end
 
   describe "update_setting/2" do
     setup do
-      on_exit fn ->
-        GenServer.call(SettingsCache, {:clear})
-        :dets.delete_all_objects(:settings_cache_disk)
-        :dets.close(:settings_cache_disk)
-        kill_proc(SettingsCache)
-      end
+      reset_cache()
       :ok
     end
 
     @tag :success
     test "updates the passed in the setting with the given value" do
-      kill_proc(SettingsCache)
       assert {:ok, "Blog Name"} == SettingsCache.get_setting(:blog_name)
       SettingsCache.update_setting(:blog_name, "Bob's Blog")
       assert {:ok, "Bob's Blog"} == SettingsCache.get_setting(:blog_name)
@@ -105,23 +164,12 @@ defmodule Blex.SettingsCacheTest do
   end
 
   describe "update_settings/2" do
-    setup do
-      on_exit fn ->
-        GenServer.call(SettingsCache, {:clear})
-        :dets.delete_all_objects(:settings_cache_disk)
-        :dets.close(:settings_cache_disk)
-      end
-      :ok
-    end
-
     @tag :success
     test "updates the passed in the settings" do
-      kill_proc(SettingsCache)
+      reset_cache()
       assert {:ok, "Blog Name"} == SettingsCache.get_setting(:blog_name)
       res = SettingsCache.update_settings(%{blog_name: "Bob's Blog", header_title: "It's Great"})
-      assert res == {:ok,
-       [favicon: "http://favicon_url", comment_platform: :blex, header_title: "It's Great", blog_tagline: "Your Blog tagline", header_content: "custom code inserted before <body>", logo: "http://logo_url", initial_setup: false, blog_name: "Bob's Blog", footer_content: "custom code inserted after <body>"]
-     }
+      assert res == {:ok, [{:favicon, "http://favicon_url"}, {:comment_platform, :blex}, {:header_title, "It's Great"}, {:blog_tagline, "Your Blog tagline"}, {:header_content, "custom code inserted before <body>"}, {:logo, "http://logo_url"}, {:initial_setup, false}, {:blog_name, "Bob's Blog"}, {:footer_content, "custom code inserted after <body>"}, []]}
     end
 
     @tag :success
@@ -132,14 +180,6 @@ defmodule Blex.SettingsCacheTest do
   end
 
   describe "on exit" do
-    setup do
-      on_exit fn ->
-        GenServer.call(SettingsCache, {:clear})
-        :dets.delete_all_objects(:settings_cache_disk)
-        :dets.close(:settings_cache_disk)
-      end
-      :ok
-    end
     test "saves the ets table to the backup dets table" do
       SettingsCache.update_setting(:blog_name, "Bob's Blog")
       Process.whereis(SettingsCache)
@@ -149,14 +189,7 @@ defmodule Blex.SettingsCacheTest do
     end
   end
 
-  def kill_proc(mod) do
-    :dets.close(:settings_cache_disk)
-
-    mod
-    |> Process.whereis
-    |> Process.exit(:kill)
-
-    :timer.sleep(300)
+  def reset_cache do
+    GenServer.call(SettingsCache, {:clear})
   end
-
 end

@@ -8,7 +8,9 @@ defmodule Blex.Admin.UserControllerTest do
 
   describe "index" do
     @tag :success
-    test "lists all users", %{conn: conn} do
+    test "lists all users" do
+      user = TestUtils.create_user
+      conn = Guardian.Plug.api_sign_in(build_conn(), user)
       conn = get conn, admin_user_path(conn, :index)
       assert html_response(conn, 200) =~ "Users"
     end
@@ -16,7 +18,9 @@ defmodule Blex.Admin.UserControllerTest do
 
   describe "new" do
     @tag :success
-    test "renders the new template", %{conn: conn} do
+    test "renders the new template" do
+      user = TestUtils.create_user
+      conn = Guardian.Plug.api_sign_in(build_conn(), user)
       conn = get conn, admin_user_path(conn, :new)
       assert html_response(conn, 200) =~ "password"
     end
@@ -26,13 +30,15 @@ defmodule Blex.Admin.UserControllerTest do
 
     setup do
       TestUtils.wipe_models
-      :ok
+      user = TestUtils.create_user
+      conn = Guardian.Plug.api_sign_in(build_conn(), user)
+      {:ok, %{conn: conn}}
     end
 
     @tag :success
     test "creates a new user with valid attrs", %{conn: conn} do
       post conn, admin_user_path(conn, :create), user: @registration_valid_attrs
-      assert Repo.all(User) |> length == 1
+      assert Repo.all(User) |> length == 2
     end
 
     @tag :success
@@ -44,7 +50,7 @@ defmodule Blex.Admin.UserControllerTest do
     @tag :failure
     test "errors for invalid password length", %{conn: conn} do
       post conn, admin_user_path(conn, :create), user: @registration_invalid_attrs
-      assert Repo.all(User) |> length == 0
+      assert Repo.all(User) |> length == 1
     end
 
     @tag :success

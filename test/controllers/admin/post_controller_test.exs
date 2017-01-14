@@ -12,7 +12,9 @@ defmodule Blex.Admin.PostControllerTest do
         %Post{}
         |> Post.changeset(@valid_attrs)
         |> Repo.insert!
-      {:ok, %{post: post}}
+      user = TestUtils.create_user
+      conn = Guardian.Plug.api_sign_in(build_conn(), user)
+      {:ok, %{post: post, conn: conn}}
     end
 
     @tag :success
@@ -24,7 +26,9 @@ defmodule Blex.Admin.PostControllerTest do
 
   describe "new" do
     @tag :success
-    test "renders the new template", %{conn: conn} do
+    test "renders the new template" do
+      user = TestUtils.create_user
+      conn = Guardian.Plug.api_sign_in(build_conn(), user)
       conn = get conn, admin_post_path(conn, :new)
       assert html_response(conn, 200) =~ "title"
     end

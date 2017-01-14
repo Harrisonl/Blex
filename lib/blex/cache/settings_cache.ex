@@ -3,7 +3,9 @@ defmodule Blex.SettingsCache do
   @moduledoc """
   This is an abstraction that handles the storing, updating and deleting of the settings cache.
 
-  All the blogs settings are stored via the :dets module, under the file name `:settings_cache`. Since
+  The cache uses :ets for lookups and writes and `:dets` for persistance. Because of the settings are frequently retrieved, `{:read_concurrency, true}` is set on the `:ets` table to provide faster lookup times.
+
+  All the blogs settings are persisted via the :dets module, under the file name `:settings_cache_disk`. Since
   they will be accessed frequently, using the dets for storage ensures the lookup will be fast.
 
   When the genserver exits, the ets table is transferred to the backup dets table.
@@ -20,22 +22,27 @@ defmodule Blex.SettingsCache do
   * :header_content -> string
   * :footer_content -> string
 
-  This means that the settings will be persisted on a server restart.
+  The api is very simple and exposes four methods:
 
-  The api is very simple and exposes two methods:
-
-  `SettingsCache.fetch(key)`
-  `SettingsCache.update(key, value)`
+  `SettingsCache.get_setting(key)`
+  `SettingsCache.get_settings(key)`
+  `SettingsCache.update_setting(key, value)`
+  `SettingsCache.update_settings(key, value)`
 
   For example:
 
   ```elixir
-  iex(1)> SettingsCache.fetch(:blog_name)
+  iex> SettingsCache.get_setting(:blog_name)
   {:ok, "Harry's Blog"}
 
+  iex> SettingsCache.get_settings
+  {:ok, [blog_name: "Harry's Blog", blog_tagline: "Welcome"]}
 
-  iex(2)> SettingsCache.update(:blog_name, "Glen's Blog")
+  iex> SettingsCache.update_setting(:blog_name, "Glen's Blog")
   {:ok, "Glen's Blog}
+
+  iex> SettingsCache.update_settings(%{blog_name: "Glen's Blog"})
+  {:ok, [blog_name: "Glen's Blog, blog_tagline: "Welcome"...]}
   ```
   """
 
@@ -98,22 +105,29 @@ defmodule Blex.SettingsCache do
   end
 
   def handle_call({:update_many, settings}, _from, state) do
-    settings
-    |> Enum.each(fn({key,val}) ->
-      key
-      |> validate_key
-      |> update_key(key, val)
-    end)
+    errors = 
+      settings
+      |> Enum.reduce([], fn({key,val}, acc) ->
+        key
+        |> key_from_string
+        |> validate_key(val)
+        |> validate_value
+        |> update_key 
+        |> add_errors(acc)
+      end)
 
-    {:reply, {:ok, :ets.tab2list(:settings_cache)}, state}
+    {:reply, {:ok, :ets.tab2list(:settings_cache) ++ [errors]}, state}
   end
 
   def handle_call({:update, key, val}, _from, state) do
-    key
-    |> validate_key
-    |> update_key(key, val)
-
-    {:reply, {:ok, val}, state}
+    update = 
+      key
+      |> key_from_string
+      |> validate_key(val)
+      |> validate_value
+      |> update_key
+    
+    create_response(update, state)
   end
 
   # Used for tests
@@ -121,6 +135,7 @@ defmodule Blex.SettingsCache do
     :settings_cache
     |> :ets.tab2list
     |> Enum.each(fn({key, _}) -> :ets.delete(:settings_cache, key) end)
+    load_defaults()
     {:reply, {:ok}, state}
   end
 
@@ -160,20 +175,44 @@ defmodule Blex.SettingsCache do
     end)
   end
 
-  defp update_key(false, _k,_v), do: nil
-  defp update_key(true, key,val) do
+  defp update_key({false, key, reason}), do: {:error, key, reason}
+  defp update_key({true, key,val}) do
     :ets.insert(:settings_cache, {key, val})
     :dets.insert(:settings_cache_disk, {key, val})
+    :ok
   end
 
-  defp validate_key(:initial_setup), do: true
-  defp validate_key(:comment_platform), do: true
-  defp validate_key(:blog_name), do: true
-  defp validate_key(:blog_tagline), do: true
-  defp validate_key(:header_title), do: true
-  defp validate_key(:logo), do: true
-  defp validate_key(:favicon), do: true
-  defp validate_key(:header_content), do: true
-  defp validate_key(:footer_content), do: true
-  defp validate_key(_), do: false
+  def key_from_string(key) when is_atom(key), do: key
+  def key_from_string(key), do: String.to_atom(key)
+
+  def add_errors(:ok, acc), do: acc
+  def add_errors({:error, key, reason}, acc), do: [{key, reason} | acc]
+
+  def create_response(:ok, state), do: {:reply, :ok, state}
+  def create_response({:error, key, reason}, state), do: {:reply, {:error, {key, reason}}, state}
+
+  # Settings key validations
+  defp validate_key(key, val) when key in [:initial_setup, :comment_platform, :blog_name, :blog_tagline, :header_title, :logo, :favicon, :header_content, :footer_content], do: {true, key, val}
+  defp validate_key(_,_v), do: {false, nil, nil}
+
+  # Settings value validations
+  defp validate_value({true, :initial_setup = key, val}) when is_boolean(val), do: {true, key, val} 
+  defp validate_value({true, :comment_platform = key, val}) when val in ["blex", "disqus"], do: {true, key, val} 
+  defp validate_value({true, :blog_name = key, val}) when is_binary(val) and byte_size(val) <= 256, do: {true, key, val} 
+  defp validate_value({true, :blog_tagline = key, val}) when is_binary(val) and byte_size(val) <= 256, do: {true, key, val} 
+  defp validate_value({true, :header_title = key, val}) when is_binary(val) and byte_size(val) <= 256, do: {true, key, val} 
+  defp validate_value({true, :logo = key, val}) when is_binary(val), do: {true, key, val} 
+  defp validate_value({true, :favicon = key, val}) when is_binary(val), do: {true, key, val} 
+  defp validate_value({true, :header_content = key, val}) when is_binary(val), do: {true, key, val} 
+  defp validate_value({true, :footer_content = key, val}) when is_binary(val), do: {true, key, val} 
+  defp validate_value({_bool, key, _val}), do: {false, key, rule_for_val(key)}
+
+  defp rule_for_val(:initial_setup), do: "Must be true/false"
+  defp rule_for_val(:comment_platform), do: "Must be either 'Blex' or 'Disqus'"
+  defp rule_for_val(:blog_name), do: "Must be less than 256 characters"
+  defp rule_for_val(:blog_tagline), do: "Must be less than 256 characters"
+  defp rule_for_val(:header_title), do: "Must be less than 256 characters"
+  defp rule_for_val(:logo), do: "Must be a valid url"
+  defp rule_for_val(:favicon), do: "Must be a valid url"
+  defp rule_for_val(_), do: "Invalid value supplied"
 end
