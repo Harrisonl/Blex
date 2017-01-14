@@ -45,4 +45,13 @@ defmodule Blex.SessionController do
     |> Guardian.Plug.sign_out
     |> redirect(to: post_path(conn, :index))
   end
+
+  @doc """
+  If the user is not logged in, send them to the login page
+  if they are trying to access a restricted page.
+  """
+  def unauthenticated(conn, _params) do
+    conn
+    |> redirect(to: session_path(conn, :new))
+  end
 end

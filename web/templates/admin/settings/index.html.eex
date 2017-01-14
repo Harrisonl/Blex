@@ -1,0 +1,6 @@
+<div style="text-align: center;">
+  <h1>Settings</h1>
+  <%= for {k, v} <- @settings do %>
+    <p><strong><%= k %></strong>: <%= v %></p>
+  <% end %>
+</div>

@@ -52,6 +52,19 @@ defmodule Blex.SettingsCache do
   end
 
   @doc """
+  Updates multiple blog settings at once. Takes in a settings map as the argument.
+
+  Returns a list of all the blogs current settings.
+
+  ```elixir
+  iex(1)> SettingsCache.update_settings(%{blog_name: "harry's blog"})
+  [blog_name: "harry's blog"]
+  """
+  def update_settings(settings) do
+    GenServer.call(__MODULE__, {:update_many, settings})
+  end
+
+  @doc """
   Fetches the value for the given key. If the key has no associated value
   then `{:error, "Setting not found"}` is returned
   """
@@ -59,28 +72,47 @@ defmodule Blex.SettingsCache do
     GenServer.call(__MODULE__, {:fetch, key})
   end
 
+  @doc """
+  Gets all of the blogs settings and converts them into a list.
+  """
+  def get_settings do
+    {:ok, :ets.tab2list(:settings_cache)}
+  end
+
   # -------- GENSERVER IMPLEMENTATION
   def init(_) do
     Process.flag(:trap_exit, :true)
-    :ets.new(:settings_cache, [:named_table])
-    load_existing_settings
-    load_defaults
+    :ets.new(:settings_cache, [:named_table, {:read_concurrency, true}])
+    load_existing_settings()
+    load_defaults()
     {:ok, []}
   end
 
   def handle_call({:fetch, key}, _from, state) do
-    val = 
-      case :ets.lookup(:settings_cache, key) do
-        [] -> 
-          {:reply, {:error, "Setting not found"}, state}
-        [{_key, val} | _rest] -> 
-          {:reply, {:ok, val}, state}
-      end
+    case :ets.lookup(:settings_cache, key) do
+      [] -> 
+        {:reply, {:error, "Setting not found"}, state}
+      [{_key, val} | _rest] -> 
+        {:reply, {:ok, val}, state}
+    end
+  end
+
+  def handle_call({:update_many, settings}, _from, state) do
+    settings
+    |> Enum.each(fn({key,val}) ->
+      key
+      |> validate_key
+      |> update_key(key, val)
+    end)
+
+    {:reply, {:ok, :ets.tab2list(:settings_cache)}, state}
   end
 
   def handle_call({:update, key, val}, _from, state) do
-    :ets.insert(:settings_cache, {key, val})
-    :dets.insert(:settings_cache_disk, {key, val})
+    key
+    |> validate_key
+    |> update_key(key, val)
+
     {:reply, {:ok, val}, state}
   end
 
@@ -92,7 +124,7 @@ defmodule Blex.SettingsCache do
     {:reply, {:ok}, state}
   end
 
-  def terminate(_reason, state) do
+  def terminate(_reason, _state) do
     :ets.to_dets(:settings_cache, :settings_cache_disk)
     :dets.close(:settings_cache_disk)
     :ok
@@ -128,5 +160,20 @@ defmodule Blex.SettingsCache do
     end)
   end
 
+  defp update_key(false, _k,_v), do: nil
+  defp update_key(true, key,val) do
+    :ets.insert(:settings_cache, {key, val})
+    :dets.insert(:settings_cache_disk, {key, val})
+  end
 
+  defp validate_key(:initial_setup), do: true
+  defp validate_key(:comment_platform), do: true
+  defp validate_key(:blog_name), do: true
+  defp validate_key(:blog_tagline), do: true
+  defp validate_key(:header_title), do: true
+  defp validate_key(:logo), do: true
+  defp validate_key(:favicon), do: true
+  defp validate_key(:header_content), do: true
+  defp validate_key(:footer_content), do: true
+  defp validate_key(_), do: false
 end

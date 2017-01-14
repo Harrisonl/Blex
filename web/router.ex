@@ -15,6 +15,10 @@ defmodule Blex.Router do
     plug Blex.CurrentUser
   end
 
+  pipeline :admin do
+    plug Guardian.Plug.EnsureAuthenticated, handler: Blex.SessionController
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -36,16 +40,18 @@ defmodule Blex.Router do
   end
 
   scope "/", Blex do
-    pipe_through [:browser, :session]
+    pipe_through [:browser, :session, :admin]
 
     scope "/admin", Admin, as: :admin do
+      # ---- POSTS
       resources "/posts", PostController
+      
+      # ---- USERS
       resources "/users", UserController
+
+      # ---- SETTINGS
+      get "/settings", SettingsController, :index
+      put "/settings", SettingsController, :update
     end
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", Blex do
-  #   pipe_through :api
-  # end
 end
