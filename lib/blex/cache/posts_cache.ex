@@ -120,7 +120,7 @@ defmodule Blex.PostsCache do
   end
 
   defp posts_for_index do
-    (from p in Post, select: [:title, :slug, :subtitle, :author, :inserted_at, :body])
+    (from p in Post, select: [:title, :slug, :subtitle, :author, :inserted_at, :body], order_by: [desc: p.inserted_at])
   end
 
   defp create_response(nil), do: {:reply, {:error, "Post not found"}, []}
