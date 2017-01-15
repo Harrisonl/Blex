@@ -19,8 +19,8 @@
     <%# Blog Title %>
     <div class="form-group">
       <label>Blog Title</label>
-      <%= text_input f, :blog_title, value: @settings[:blog_tagline], class: "form-control" %>
-      <%= error_tag @settings, :blog_title %>
+      <%= text_input f, :header_title, value: @settings[:header_title], class: "form-control" %>
+      <%= error_tag @settings, :header_title %>
     </div>
 
     <%# Comment Platform %>
