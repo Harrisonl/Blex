@@ -193,7 +193,7 @@ defmodule Blex.SettingsCache do
   def key_from_string(key), do: String.to_atom(key)
 
   def add_errors(:ok, acc), do: acc
-  def add_errors({:error, nil, reason}, acc), do: acc
+  def add_errors({:error, nil, _reason}, acc), do: acc
   def add_errors({:error, key, reason}, acc), do: Map.put(acc, key, reason)
 
   def create_response(:ok, state), do: {:reply, :ok, state}
