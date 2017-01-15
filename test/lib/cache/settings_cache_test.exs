@@ -14,7 +14,7 @@ defmodule Blex.SettingsCacheTest do
   describe "validations" do
     test "should have all the errors along with settings" do
       reset_cache()
-      assert SettingsCache.update_settings(%{"blog_name" => 123, "initial_setup" => 123}) == {:ok, [{:favicon, "http://favicon_url"}, {:comment_platform, :blex}, {:header_title, "Blog title"}, {:blog_tagline, "Your Blog tagline"}, {:header_content, "custom code inserted before <body>"}, {:logo, "http://logo_url"}, {:initial_setup, false}, {:blog_name, "Blog Name"}, {:footer_content, "custom code inserted after <body>"}, [initial_setup: "Must be true/false", blog_name: "Must be less than 256 characters"]]}
+      assert SettingsCache.update_settings(%{"blog_name" => 123, "initial_setup" => 123}) == {:error, [errors: %{blog_name: "Must be less than 256 characters", initial_setup: "Must be true/false"}, favicon: "http://favicon_url", comment_platform: :blex, header_title: "Blog title", blog_tagline: "Your Blog tagline", header_content: "custom code inserted before <body>", logo: "http://logo_url", initial_setup: false, blog_name: "Blog Name", footer_content: "custom code inserted after <body>"]}
     end
 
     test "should update initial_setup" do
@@ -169,7 +169,7 @@ defmodule Blex.SettingsCacheTest do
       reset_cache()
       assert {:ok, "Blog Name"} == SettingsCache.get_setting(:blog_name)
       res = SettingsCache.update_settings(%{blog_name: "Bob's Blog", header_title: "It's Great"})
-      assert res == {:ok, [{:favicon, "http://favicon_url"}, {:comment_platform, :blex}, {:header_title, "It's Great"}, {:blog_tagline, "Your Blog tagline"}, {:header_content, "custom code inserted before <body>"}, {:logo, "http://logo_url"}, {:initial_setup, false}, {:blog_name, "Bob's Blog"}, {:footer_content, "custom code inserted after <body>"}, []]}
+      assert res == {:ok, [{:favicon, "http://favicon_url"}, {:comment_platform, :blex}, {:header_title, "It's Great"}, {:blog_tagline, "Your Blog tagline"}, {:header_content, "custom code inserted before <body>"}, {:logo, "http://logo_url"}, {:initial_setup, false}, {:blog_name, "Bob's Blog"}, {:footer_content, "custom code inserted after <body>"}]}
     end
 
     @tag :success

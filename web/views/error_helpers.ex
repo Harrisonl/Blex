@@ -8,6 +8,12 @@ defmodule Blex.ErrorHelpers do
   @doc """
   Generates tag for inlined form input errors.
   """
+  def error_tag(form, field) when is_list(form) do
+    if error = form[:errors][field] do
+      content_tag :span, error, class: "help-block"
+    end
+  end
+
   def error_tag(form, field) do
     if error = form.errors[field] do
       content_tag :span, translate_error(error), class: "help-block"

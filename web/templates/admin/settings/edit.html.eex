@@ -6,56 +6,56 @@
     <div class="form-group">
       <label>Blog Name</label>
       <%= text_input f, :blog_name, value: @settings[:blog_name], class: "form-control" %>
-      <%= error_tag f, :blog_name %>
+      <%= error_tag @settings, :blog_name %>
     </div>
 
     <%# Blog Tagline %>
     <div class="form-group">
       <label>Blog Tagline</label>
       <%= text_input f, :blog_tagline, value: @settings[:blog_tagline], class: "form-control" %>
-      <%= error_tag f, :blog_tagline %>
+      <%= error_tag @settings, :blog_tagline %>
     </div>
 
     <%# Blog Title %>
     <div class="form-group">
       <label>Blog Title</label>
       <%= text_input f, :blog_title, value: @settings[:blog_tagline], class: "form-control" %>
-      <%= error_tag f, :blog_title %>
+      <%= error_tag @settings, :blog_title %>
     </div>
 
     <%# Comment Platform %>
     <div class="form-group">
       <label>Comment Platform</label>
       <%= select f, :comment_platform, ["Blex Comments": "blex", "Disqus": "disqus"], value: @settings[:comment_platform], class: "form-control" %>
-      <%= error_tag f, :comment_platform %>
+      <%= error_tag @settings, :comment_platform %>
     </div>
 
     <%# Logo %>
     <div class="form-group">
       <label>Logo</label>
       <%= text_input f, :logo, value: @settings[:logo], class: "form-control" %>
-      <%= error_tag f, :logo %>
+      <%= error_tag @settings, :logo %>
     </div>
 
     <%# Favicon %>
     <div class="form-group">
       <label>Favicon</label>
       <%= text_input f, :favicon, value: @settings[:favicon], class: "form-control" %>
-      <%= error_tag f, :favicon %>
+      <%= error_tag @settings, :favicon %>
     </div>
 
     <%# Header Content %>
     <div class="form-group">
       <label>Header Content</label>
       <%= text_input f, :header_content, value: @settings[:header_content], class: "form-control" %>
-      <%= error_tag f, :header_content %>
+      <%= error_tag @settings, :header_content %>
     </div>
 
     <%# Footer Content %>
     <div class="form-group">
       <label>Footer Content</label>
       <%= text_input f, :footer_content, value: @settings[:footer_content], class: "form-control" %>
-      <%= error_tag f, :footer_content %>
+      <%= error_tag @settings, :footer_content %>
     </div>
     <%= submit "Update", class: "btn btn-primary" %>
   <% end %>

@@ -19,7 +19,11 @@ defmodule Blex.Admin.SettingsController do
   Updates the passed in settings and returns a list of the settings
   """
   def update(conn, %{"settings" => settings_params}) do
-    {:ok, settings} = SettingsCache.update_settings(settings_params)
-    render(conn, "index.html", settings: settings)
+    case SettingsCache.update_settings(settings_params) do
+      {:ok, settings} ->
+        render(conn, "index.html", settings: settings)
+      {:error, settings} ->
+        render(conn, "edit.html", settings: settings)
+    end
   end
 end

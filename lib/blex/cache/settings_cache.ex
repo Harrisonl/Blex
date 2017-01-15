@@ -107,7 +107,7 @@ defmodule Blex.SettingsCache do
   def handle_call({:update_many, settings}, _from, state) do
     errors = 
       settings
-      |> Enum.reduce([], fn({key,val}, acc) ->
+      |> Enum.reduce(%{}, fn({key,val}, acc) ->
         key
         |> key_from_string
         |> validate_key(val)
@@ -116,7 +116,14 @@ defmodule Blex.SettingsCache do
         |> add_errors(acc)
       end)
 
-    {:reply, {:ok, :ets.tab2list(:settings_cache) ++ [errors]}, state}
+    settings_list = :ets.tab2list(:settings_cache)
+
+    cond do
+      %{} == errors ->
+        {:reply, {:ok, settings_list}, state}
+      true ->
+        {:reply, {:error, [{:errors, errors} | settings_list]}, state}
+    end
   end
 
   def handle_call({:update, key, val}, _from, state) do
@@ -186,7 +193,8 @@ defmodule Blex.SettingsCache do
   def key_from_string(key), do: String.to_atom(key)
 
   def add_errors(:ok, acc), do: acc
-  def add_errors({:error, key, reason}, acc), do: [{key, reason} | acc]
+  def add_errors({:error, nil, reason}, acc), do: acc
+  def add_errors({:error, key, reason}, acc), do: Map.put(acc, key, reason)
 
   def create_response(:ok, state), do: {:reply, :ok, state}
   def create_response({:error, key, reason}, state), do: {:reply, {:error, {key, reason}}, state}
