@@ -30,6 +30,12 @@
                 <li class="site-nav-item">
                   <%= link "Sign out", to: signout_session_path(@conn, :delete) %>
                 </li>
+                <li class="site-nav-item">
+                  <%= link "Settings", to: admin_settings_path(@conn, :index) %>
+                </li>
+                <li class="site-nav-item">
+                  <%= link "New Post", to: admin_post_path(@conn, :new) %>
+                </li>
               <% end %>
             </ul>
           </div>

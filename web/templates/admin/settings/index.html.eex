@@ -1,5 +1,6 @@
 <div style="text-align: center;">
-  <h1>Settings</h1>
+  <h1>Settings </h1>
+  <%= link "Edit", to: admin_settings_path(@conn, :edit), class: "btn btn-primary" %>
   <%= for {k, v} <- @settings do %>
     <p><strong><%= k %></strong>: <%= v %></p>
   <% end %>

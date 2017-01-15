@@ -19,6 +19,22 @@ defmodule Blex.Admin.SettingsControllerTest do
     end
   end
 
+  describe "edit" do
+    @tag :success
+    test "renders the edit page" do
+      user = TestUtils.create_user
+      conn = Guardian.Plug.api_sign_in(build_conn(), user)
+      conn = get conn, admin_settings_path(conn, :edit)
+      assert html_response(conn, 200) =~ "Edit Settings"
+    end
+
+    @tag :failure
+    test "redirect to the login page", %{conn: conn} do
+      conn = get conn, admin_settings_path(conn, :edit)
+      assert html_response(conn, 302) =~ "You are being <a href=\"/login\">redirected</a>"
+    end
+  end
+
   describe "update" do
     setup do
       TestUtils.wipe_models

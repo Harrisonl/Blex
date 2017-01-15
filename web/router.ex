@@ -51,6 +51,7 @@ defmodule Blex.Router do
 
       # ---- SETTINGS
       get "/settings", SettingsController, :index
+      get "/settings/edit", SettingsController, :edit
       put "/settings", SettingsController, :update
     end
   end
