@@ -805,3 +805,9 @@ kbd {
   font-weight: bold; }
 
 /*# sourceMappingURL=style.css.map */
+
+/* Custom CSS */
+
+.form-control {
+  width: 50%;
+}

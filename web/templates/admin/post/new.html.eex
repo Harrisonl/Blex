@@ -1,34 +1,51 @@
-<h1>Create Post</h1>
-<%= form_for @changeset, admin_post_path(@conn, :create), fn f -> %>
-  <%= if @changeset.action do %>
-    <div class="alert alert-danger">
-      <p>There are some errors</p>
+<div style="text-align: center;">
+  <h1>Create Post</h1>
+  <%= form_for @changeset, admin_post_path(@conn, :create), fn f -> %>
+    <%= if @changeset.action do %>
+      <div class="alert alert-danger">
+        <p>There are some errors</p>
+      </div>
+    <% end %>
+
+    <div class="form-group">
+      <p style="margin-bottom: 5px;">
+        <label>Title</label>
+      </p>
+      <%= text_input f, :title, placeholder: "Title", class: "form-control" %>
+      <%= error_tag f, :title %>
     </div>
+
+    <div class="form-group">
+      <p style="margin-bottom: 5px;">
+        <label>Slug</label>
+      </p>
+      <%= text_input f, :slug, placeholder: "Slug", class: "form-control" %>
+      <%= error_tag f, :slug %>
+    </div>
+
+    <div class="form-group">
+      <p style="margin-bottom: 5px;">
+        <label>Body</label>
+      </p>
+      <%= textarea f, :body, [placeholder: "Body", rows: 20, class: "form-control"] %>
+      <%= error_tag f, :body %>
+    </div>
+
+    <div class="form-group">
+      <p style="margin-bottom: 5px;">
+        <label>Status</label>
+      </p>
+      <%= select f, :status, ["Published":  "published", "Draft": "draft"], class: "form-control" %>
+      <%= error_tag f, :status %>
+    </div>
+
+    <div class="form-group">
+      <p style="margin-bottom: 5px;">
+        <label>Author</label>
+      </p>
+      <%= text_input f, :author, placeholder: "Author", class: "form-control" %>
+      <%= error_tag f, :author %>
+    </div>
+    <%= submit "Create post", class: "btn btn-primary" %>
   <% end %>
-
-  <div class="form-group">
-    <%= text_input f, :title, placeholder: "Title", class: "form-control" %>
-    <%= error_tag f, :title %>
-  </div>
-
-  <div class="form-group">
-    <%= textarea f, :slug, placeholder: "Body", class: "form-control" %>
-    <%= error_tag f, :slug %>
-  </div>
-
-  <div class="form-group">
-    <%= textarea f, :body, placeholder: "Body", class: "form-control" %>
-    <%= error_tag f, :body %>
-  </div>
-
-  <div class="form-group">
-    <%= textarea f, :status, placeholder: "Body", class: "form-control" %>
-    <%= error_tag f, :status %>
-  </div>
-
-  <div class="form-group">
-    <%= textarea f, :author, placeholder: "Body", class: "form-control" %>
-    <%= error_tag f, :author %>
-  </div>
-  <%= submit "Create post", class: "btn btn-primary" %>
-<% end %>
+</div>
