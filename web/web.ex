@@ -53,6 +53,7 @@ defmodule Blex.Web do
       import Blex.Router.Helpers
       import Blex.ErrorHelpers
       import Blex.Gettext
+      import Blex.SettingsHelpers
     end
   end
 

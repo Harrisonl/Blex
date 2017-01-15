@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Hello Blex!</title>
+    <title><%= setting(:header_title) %></title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/normalize.css") %>">
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/style.css") %>">
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/nprogress.css") %>">
