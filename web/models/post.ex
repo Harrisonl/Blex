@@ -16,7 +16,7 @@ defmodule Blex.Post do
     field :slug, :string
 
     belongs_to :user, Blex.User
-    timestamps
+    timestamps()
   end
 
   @required_params ~w(title slug body status author)

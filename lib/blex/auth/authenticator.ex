@@ -14,7 +14,7 @@ defmodule Blex.Authenticator do
   If the user is nil (e.g. not found) it will simulate a password check in order
   to prevent bruteforce attacks.
   """
-  def check_pw(nil, _password), do: {:error, dummy_checkpw, nil}
+  def check_pw(nil, _password), do: {:error, dummy_checkpw(), nil}
   def check_pw(user, password), do: {:ok, checkpw(password, user.password_hash), user}
 
   @doc """
@@ -25,7 +25,7 @@ defmodule Blex.Authenticator do
   def login({:ok, true, user}, conn), do: {:ok, do_login(conn, user)}
   def login({:ok, false, _user}, _conn), do: {:error, :unauthorized}
   def login({:error, _, _user}, _conn) do 
-    dummy_checkpw
+    dummy_checkpw()
     {:error, :not_found}
   end
 
